@@ -10,33 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OauthMailReturnRouteImport } from './routes/oauth/mail/return'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OauthMailReturnRoute = OauthMailReturnRouteImport.update({
+  id: '/oauth/mail/return',
+  path: '/oauth/mail/return',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/oauth/mail/return': typeof OauthMailReturnRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/oauth/mail/return': typeof OauthMailReturnRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/oauth/mail/return': typeof OauthMailReturnRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/oauth/mail/return'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/oauth/mail/return'
+  id: '__root__' | '/' | '/oauth/mail/return'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  OauthMailReturnRoute: typeof OauthMailReturnRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +58,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/oauth/mail/return': {
+      id: '/oauth/mail/return'
+      path: '/oauth/mail/return'
+      fullPath: '/oauth/mail/return'
+      preLoaderRoute: typeof OauthMailReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  OauthMailReturnRoute: OauthMailReturnRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
