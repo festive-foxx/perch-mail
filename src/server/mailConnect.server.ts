@@ -37,7 +37,7 @@ export async function beginConnect(userId: string) {
     appUserId: userId,
     clientAPIKey: clientApiKey,
     returnUrl,
-    connectionAPIKey: existingKey ?? undefined,
+    ...(existingKey ? { connectionAPIKey: existingKey } : {}),
     credentialsConfiguration: { scopes: GMAIL_SCOPES },
   });
   return { authorizationUrl };
