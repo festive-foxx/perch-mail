@@ -180,8 +180,8 @@ export async function listMessages(
   const list = await gmailFetch(userId, `/gmail/v1/users/me/messages?${params.toString()}`);
   const ids: string[] = (list.messages ?? []).map((m: any) => m.id);
 
-  const messages = await Promise.all(
-    ids.map(async (id) => {
+  const messages = await mapLimited(ids, 5, async (id) => {
+    {
       const m = await gmailFetch(
         userId,
         `/gmail/v1/users/me/messages/${id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`,
@@ -200,8 +200,8 @@ export async function listMessages(
         hasAttachment: false,
       };
       return summary;
-    }),
-  );
+    }
+  });
 
   return { messages, nextPageToken: (list.nextPageToken as string | undefined) ?? null };
 }
