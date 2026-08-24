@@ -126,9 +126,20 @@ function Mailbox({ email }: { email: string }) {
   const active = FOLDERS[folder]!;
   const effectiveQuery = [active.q, query].filter(Boolean).join(" ");
 
+  // The server already retries throttling/outages with backoff; the client adds
+  // one extra spaced-out attempt and never retries states that need user action.
+  const retryPolicy = (count: number, error: unknown) =>
+    isRetryable(parseMailError(error).kind) && count < 2;
+  const retryDelay = (count: number, error: unknown) => {
+    const after = parseMailError(error).retryAfter;
+    return after ? Math.min(after * 1000, 10000) : 1500 * 2 ** count;
+  };
+
   const messages = useQuery({
     queryKey: ["mail-list", active.label, effectiveQuery],
     enabled: connected,
+    retry: retryPolicy,
+    retryDelay,
     queryFn: () =>
       listFn({
         data: {
@@ -141,6 +152,8 @@ function Mailbox({ email }: { email: string }) {
   const message = useQuery({
     queryKey: ["mail-message", selectedId],
     enabled: Boolean(selectedId),
+    retry: retryPolicy,
+    retryDelay,
     queryFn: () => readFn({ data: { id: selectedId! } }),
   });
 
@@ -345,6 +358,47 @@ function Mailbox({ email }: { email: string }) {
           </section>
         </main>
       )}
+    </div>
+  );
+}
+
+function MailErrorState({
+  error,
+  onRetry,
+  onReconnect,
+  retrying,
+  reconnecting,
+}: {
+  error: unknown;
+  onRetry: () => void;
+  onReconnect: () => void;
+  retrying: boolean;
+  reconnecting: boolean;
+}) {
+  const parsed = parseMailError(error);
+  const needsReconnect = parsed.kind === "reauth" || parsed.kind === "not_connected";
+
+  return (
+    <div className="p-6">
+      <div className="rounded-xl border border-border bg-muted/40 p-5">
+        <p className="text-sm font-semibold text-foreground">{mailErrorTitle(parsed.kind)}</p>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{parsed.message}</p>
+        {parsed.retryAfter ? (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Suggested wait: about {parsed.retryAfter}s.
+          </p>
+        ) : null}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {needsReconnect ? (
+            <Button size="sm" onClick={onReconnect} disabled={reconnecting}>
+              {reconnecting ? "Waiting for your consent…" : "Reconnect mailbox"}
+            </Button>
+          ) : null}
+          <Button size="sm" variant="outline" onClick={onRetry} disabled={retrying}>
+            {retrying ? "Retrying…" : "Try again"}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
