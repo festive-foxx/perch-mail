@@ -282,9 +282,13 @@ function Mailbox({ email }: { email: string }) {
                   </div>
                 ))}
               {messages.isError && (
-                <p className="p-6 text-sm text-destructive">
-                  Couldn't load this folder. Try reconnecting your mailbox.
-                </p>
+                <MailErrorState
+                  error={messages.error}
+                  onRetry={() => messages.refetch()}
+                  onReconnect={() => connect.mutate()}
+                  retrying={messages.isFetching}
+                  reconnecting={connect.isPending}
+                />
               )}
               {messages.data?.messages.length === 0 && (
                 <p className="p-6 text-sm text-muted-foreground">Nothing here.</p>
