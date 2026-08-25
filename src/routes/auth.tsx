@@ -95,7 +95,7 @@ function AuthPage() {
           style={{ boxShadow: "var(--shadow-panel)" }}
         >
           <h1 className="font-display text-3xl leading-tight text-foreground">
-            {mode === "signin" ? "Welcome back" : "Create your account"}
+            {mode === "signin" ? "Sign in to Perch Mail" : "Create your Perch Mail account"}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Your Perch account is separate from your mailbox. You choose, later and explicitly,
