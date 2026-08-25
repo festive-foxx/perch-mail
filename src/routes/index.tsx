@@ -34,8 +34,10 @@ export const Route = createFileRoute("/")({
           "Read your mailbox in a fast, distraction-free client. Read-only by design, connected only with your consent.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://perch-mail.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://perch-mail.lovable.app/" }],
   }),
   component: Index,
 });

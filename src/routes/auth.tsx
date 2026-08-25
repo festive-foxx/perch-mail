@@ -23,8 +23,10 @@ export const Route = createFileRoute("/auth")({
         content: "Consent-based, read-only access to your own mailbox.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://perch-mail.lovable.app/auth" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://perch-mail.lovable.app/auth" }],
   }),
   component: AuthPage,
 });
@@ -95,7 +97,7 @@ function AuthPage() {
           style={{ boxShadow: "var(--shadow-panel)" }}
         >
           <h1 className="font-display text-3xl leading-tight text-foreground">
-            {mode === "signin" ? "Welcome back" : "Create your account"}
+            {mode === "signin" ? "Sign in to Perch Mail" : "Create your Perch Mail account"}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Your Perch account is separate from your mailbox. You choose, later and explicitly,
@@ -161,6 +163,34 @@ function AuthPage() {
             </button>
           </p>
         </div>
+
+        <section className="mt-10 space-y-6 text-sm leading-relaxed text-muted-foreground">
+          <div>
+            <h2 className="font-display text-2xl text-foreground">
+              A calm, read-only inbox for mail you already own
+            </h2>
+            <p className="mt-2">
+              Perch Mail is a lightweight webmail reader for people who can't use the Gmail
+              interface or sync their account into another mail app. It shows your existing mailbox
+              in a plain, fast, distraction-free view — no new email address, no migration.
+            </p>
+          </div>
+          <div>
+            <h2 className="font-display text-xl text-foreground">Read-only, by design</h2>
+            <p className="mt-2">
+              Perch asks only for read permission. It cannot send, reply, delete, archive or label
+              anything, so connecting it can never change what's in your mailbox.
+            </p>
+          </div>
+          <div>
+            <h2 className="font-display text-xl text-foreground">Connected only with consent</h2>
+            <p className="mt-2">
+              Your Perch account is separate from your mailbox. After signing in you decide,
+              explicitly, whether to grant read access — and you can disconnect at any time, which
+              removes the stored connection immediately.
+            </p>
+          </div>
+        </section>
       </div>
     </main>
   );
