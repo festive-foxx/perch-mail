@@ -23,8 +23,10 @@ export const Route = createFileRoute("/auth")({
         content: "Consent-based, read-only access to your own mailbox.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://perch-mail.lovable.app/auth" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://perch-mail.lovable.app/auth" }],
   }),
   component: AuthPage,
 });
