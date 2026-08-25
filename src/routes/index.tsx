@@ -335,7 +335,13 @@ function Mailbox({ email }: { email: string }) {
                 <Skeleton className="h-40 w-full" />
               </div>
             ) : message.isError ? (
-              <p className="text-sm text-destructive">Couldn't open this message.</p>
+              <MailErrorState
+                error={message.error}
+                onRetry={() => message.refetch()}
+                onReconnect={() => connect.mutate()}
+                retrying={message.isFetching}
+                reconnecting={connect.isPending}
+              />
             ) : message.data ? (
               <article>
                 <h1 className="font-display text-3xl leading-snug">{message.data.subject}</h1>
