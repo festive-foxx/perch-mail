@@ -206,8 +206,19 @@ export async function listMessages(
   return { messages, nextPageToken: (list.nextPageToken as string | undefined) ?? null };
 }
 
+const GMAIL_ID_RE = /^[A-Za-z0-9_-]{1,128}$/;
+
 export async function getMessage(userId: string, id: string) {
-  const m = await gmailFetch(userId, `/gmail/v1/users/me/messages/${id}?format=full`);
+  if (typeof id !== "string" || !GMAIL_ID_RE.test(id)) {
+    throw encodeMailError({
+      kind: "not_found",
+      message: "This message reference isn't valid.",
+    });
+  }
+  const m = await gmailFetch(
+    userId,
+    `/gmail/v1/users/me/messages/${encodeURIComponent(id)}?format=full`,
+  );
   const body = collectBody(m.payload, {});
   const from = header(m.payload?.headers, "From");
   return {
