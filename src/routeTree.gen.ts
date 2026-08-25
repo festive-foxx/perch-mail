@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as OauthMailReturnRouteImport } from './routes/oauth/mail/return'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OauthMailReturnRoute = OauthMailReturnRouteImport.update({
   id: '/oauth/mail/return',
   path: '/oauth/mail/return',
@@ -32,30 +38,34 @@ const OauthMailReturnRoute = OauthMailReturnRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/oauth/mail/return': typeof OauthMailReturnRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/oauth/mail/return': typeof OauthMailReturnRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/oauth/mail/return': typeof OauthMailReturnRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/oauth/mail/return'
+  fullPaths: '/' | '/auth' | '/sitemap.xml' | '/oauth/mail/return'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/oauth/mail/return'
-  id: '__root__' | '/' | '/auth' | '/oauth/mail/return'
+  to: '/' | '/auth' | '/sitemap.xml' | '/oauth/mail/return'
+  id: '__root__' | '/' | '/auth' | '/sitemap.xml' | '/oauth/mail/return'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   OauthMailReturnRoute: typeof OauthMailReturnRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/oauth/mail/return': {
       id: '/oauth/mail/return'
       path: '/oauth/mail/return'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   OauthMailReturnRoute: OauthMailReturnRoute,
 }
 export const routeTree = rootRouteImport
