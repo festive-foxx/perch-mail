@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    open-pull-requests-limit: 5
+    versioning-strategy: increase
+    labels:
+      - "dependencies"
+    groups:
+      # TanStack packages must move together — mismatched versions break the build.
+      tanstack:
+        patterns:
+          - "@tanstack/*"
+      radix:
+        patterns:
+          - "@radix-ui/*"
+      dev-tooling:
+        dependency-type: "development"
+        patterns:
+          - "*"
+    ignore:
+      # Pinned by the Lovable template; update these deliberately.
+      - dependency-name: "vite"
+      - dependency-name: "nitro"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
