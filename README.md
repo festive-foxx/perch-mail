@@ -6,8 +6,6 @@ This project was built with [Lovable](https://lovable.dev).
 
 **Live app**: https://perch-mail.lovable.app
 
-## Build with Lovable
-
 Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
