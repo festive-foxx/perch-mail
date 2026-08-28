@@ -9,7 +9,10 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "deps:update": "bash scripts/update-deps.sh tanstack",
+    "deps:update:all": "bash scripts/update-deps.sh all",
+    "deps:audit": "bun audit --audit-level=high"
   },
   "overrides": {
     "rolldown": "1.2.1"
