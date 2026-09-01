@@ -42,9 +42,17 @@ function classify(status: number, body: string): { kind: MailErrorKind; message:
         "Your mail provider no longer accepts this connection — consent may have expired or been revoked. Reconnect to continue reading.",
     };
   }
+  if (status === 400 && (lowered.includes("mail service not enabled") || lowered.includes("failedprecondition"))) {
+    return {
+      kind: "unknown",
+      message:
+        "This Google account doesn't have a Gmail mailbox enabled, so there's nothing to read. Connect an account that has Gmail turned on (a personal @gmail.com account, or a Workspace account with Gmail enabled).",
+    };
+  }
   if (status === 404) {
     return { kind: "not_found", message: "This message was moved or deleted in your mailbox." };
   }
+
   if (status === 429) {
     return {
       kind: "rate_limited",
