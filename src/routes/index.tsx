@@ -159,6 +159,19 @@ function Mailbox({ email }: { email: string }) {
     queryFn: () => readFn({ data: { id: selectedId! } }),
   });
 
+  // Expired/revoked consent isn't a crash: flip back to the consent panel so the
+  // user gets a clear reconnect path instead of a failing inbox.
+  const listErrorKind = messages.isError ? parseMailError(messages.error).kind : null;
+  const readErrorKind = message.isError ? parseMailError(message.error).kind : null;
+  useEffect(() => {
+    if (listErrorKind === "reauth" || readErrorKind === "reauth") {
+      setSelectedId(null);
+      queryClient.setQueryData(["mail-connection"], { connected: false });
+    }
+  }, [listErrorKind, readErrorKind, queryClient]);
+
+
+
   const connect = useMutation({
     mutationFn: async () => {
       const popup = window.open("", "perch-mail-oauth", "width=600,height=720");
