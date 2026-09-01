@@ -20,6 +20,14 @@ function sleep(ms: number) {
 function classify(status: number, body: string): { kind: MailErrorKind; message: string } {
   const lowered = body.toLowerCase();
   if (status === 401 || status === 403) {
+    // Project-level API activation problem — reconnecting can never fix this.
+    if (lowered.includes("accessnotconfigured") || lowered.includes("service_disabled")) {
+      return {
+        kind: "unknown",
+        message:
+          "Gmail access isn't switched on for this app's Google project yet. Enable the Gmail API for the app's Google Cloud project, wait a few minutes, then try again — reconnecting won't help.",
+      };
+    }
     if (lowered.includes("insufficient authentication scopes")) {
       return {
         kind: "reauth",
@@ -27,6 +35,7 @@ function classify(status: number, body: string): { kind: MailErrorKind; message:
           "Perch is missing the read permission for your mailbox. Reconnect to grant read-only access again.",
       };
     }
+
     return {
       kind: "reauth",
       message:
